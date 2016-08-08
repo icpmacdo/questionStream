@@ -10,14 +10,12 @@ function loadQuestions(){
   
   url = "https://api.stackexchange.com/2.2/questions?page=" + pageNumber + "&pagesize=15&max=" + getQuestionsFromLoad + "&order=desc&sort=creation&site=stackoverflow"
   pageNumber += 1;
-  // console.log(url);
   $.ajax({
     type: 'GET',
     url: url,
     dataType: 'json',
     cache: false,
     success: function(data){
-  	  // console.log(data);
   	  var questionItems = [];
         for(var key in data.items) {
           questionItems.push('<div class="questionCard"> <button class="accordion"><h2> '+ data.items[key].title + '</h2></button>  <div class="panel"><h3> Submitted by: <a href="' + data.items[key].owner.link + '">' + data.items[key].owner.display_name  + '</a> </h3>  <p>Answer count:  ' + data.items[key].answer_count +' </p><a href="' + data.items[key].link + ' ">link</a></div></div><br>' );
