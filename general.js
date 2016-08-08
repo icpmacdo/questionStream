@@ -10,22 +10,28 @@ function loadQuestions(){
   
   url = "https://api.stackexchange.com/2.2/questions?page=" + pageNumber + "&pagesize=15&max=" + getQuestionsFromLoad + "&order=desc&sort=creation&site=stackoverflow"
   pageNumber += 1;
-  console.log(url);
-
+  // console.log(url);
   $.ajax({
     type: 'GET',
     url: url,
     dataType: 'json',
     cache: false,
     success: function(data){
-  	  console.log(data);
+  	  // console.log(data);
   	  var questionItems = [];
         for(var key in data.items) {
-		  questionItems.push('<div class="questionCard"> <h2><a href="' + data.items[key].link + ' ">' + data.items[key].title + '</a></h2>  <p> Submitted by: <a href="' + data.items[key].owner.link + '">' + data.items[key].owner.display_name  + '</a> </p>  <p>Answer count:  ' + data.items[key].answer_count +' </p> </div><br>');
+          questionItems.push('<div class="questionCard"> <button class="accordion"><h2> '+ data.items[key].title + '</h2></button>  <div class="panel"><h3> Submitted by: <a href="' + data.items[key].owner.link + '">' + data.items[key].owner.display_name  + '</a> </h3>  <p>Answer count:  ' + data.items[key].answer_count +' </p><a href="' + data.items[key].link + ' ">link</a></div></div><br>' );
         } 
       $(questionItems.join('')).appendTo('.questionsContainer');
-      questionItems = [];
       pollingData = false;
+       	var acc = document.getElementsByClassName("accordion");
+		var i;
+		for (i = 0; i < acc.length; i++) {
+		    acc[i].onclick = function(){
+		        this.classList.toggle("active");
+		        this.nextElementSibling.classList.toggle("show");
+		    }
+		}
     }
   });
 }
@@ -40,11 +46,11 @@ function getDistFromBottom () {
 document.addEventListener('scroll', function() {        
   distToBottom = getDistFromBottom();
   if (!pollingData && distToBottom > 0 && distToBottom <= 1111) {
-    // console.log('Hitting the bottom of the page');
     pollingData = true;
-    //pageNumber++;
     loadQuestions();
   }
 });
+
 loadQuestions();
+
 });
